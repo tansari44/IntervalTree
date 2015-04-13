@@ -1,0 +1,90 @@
+package structures;
+
+import java.util.ArrayList;
+
+/**
+ * This class is a repository of sorting methods used by the interval tree.
+ * It's a utility class - all methods are static, and the class cannot be instantiated
+ * i.e. no objects can be created for this class.
+ * 
+ * @author runb-cs112
+ */
+public class Sorter {
+
+	private Sorter() { }
+	
+	/**
+	 * Sorts a set of intervals in place, according to left or right end.  
+	 * At the end of the method, the parameter array list is a sorted list. 
+	 * 
+	 * @param intervals Array list of intervals to be sorted.
+	 * @param lr If 'l', then sort is on left endpoints; if 'r', sort is on right endpoints
+	 */
+	public static void sortIntervals(ArrayList<Interval> intervals, char lr) {
+		
+		if(lr == 'l'){
+			for (int i = 1; i < intervals.size(); i++){
+				  int j = i;
+				  int tmp = intervals.get(i).leftEndPoint;
+				  	while ((j > 0) && (intervals.get(j-1).leftEndPoint > tmp)){
+					  intervals.get(j).leftEndPoint = intervals.get(j-1).leftEndPoint;
+				  	j--;
+				  }
+				  	intervals.get(j).leftEndPoint = tmp;
+				  }
+				  
+				
+		}else if(lr == 'r'){
+			for (int i = 1; i < intervals.size(); i++){
+				  int j = i;
+				  int tmp = intervals.get(i).rightEndPoint;
+				  	while ((j > 0) && (intervals.get(j-1).rightEndPoint > tmp)){
+					  intervals.get(j).rightEndPoint = intervals.get(j-1).rightEndPoint;
+				  	j--;
+				  }
+				  	intervals.get(j).rightEndPoint = tmp;
+				  }
+			
+		}
+	}
+	
+	/**
+	 * Given a set of intervals (left sorted and right sorted), extracts the left and right end points,
+	 * and returns a sorted list of the combined end points without duplicates.
+	 * 
+	 * @param leftSortedIntervals Array list of intervals sorted according to left endpoints
+	 * @param rightSortedIntervals Array list of intervals sorted according to right endpoints
+	 * @return Sorted array list of all endpoints without duplicates
+	 */
+	public static ArrayList<Integer> getSortedEndPoints(ArrayList<Interval> leftSortedIntervals, ArrayList<Interval> rightSortedIntervals) {
+		
+		ArrayList<Integer> points = new ArrayList<Integer>();
+		
+		for(int i = 0; i < leftSortedIntervals.size(); i++){
+			int tmp = leftSortedIntervals.get(i).leftEndPoint;
+			points.add(tmp);
+			
+		}
+		for(int i = 0; i < rightSortedIntervals.size(); i++){
+			int tmp = rightSortedIntervals.get(i).rightEndPoint;
+			points.add(tmp);
+			
+		}
+		for (int i = 1; i < points.size(); i++){
+			  int j = i;
+			  int tmp = points.get(i);
+			  	while ((j > 0) && (points.get(j-1) > tmp)){
+				  points.set(j, points.get(j-1));
+			  	j--;
+			  }
+			  	points.set(j, tmp);
+			  }
+		for(int i = points.size(); i != 0; i--){
+			if(points.get(i) == points.get(i-1)){
+				points.remove(i);
+			}
+		}
+		
+		return points;
+	}
+}
